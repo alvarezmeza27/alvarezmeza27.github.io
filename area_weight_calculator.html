@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Weight Calculator</title>
+    <link rel="stylesheet" href="css/area_weight_styles.css">
+</head>
+
+<body>
+    <div class="calculator-container">
+        <h3>Dry Fabric Weight Calculator</h3>
+
+        <div id="inputRows">
+            <div class="excel-row">
+                <div class="cell">
+                    <label for="arealWeight">Areal Weight [Oz sq yard]:</label>
+                    <input type="number" name="arealWeight" placeholder="Enter Areal Weight">
+                </div>
+                <div class="cell">
+                    <label for="areaOfMaterial">Area of Material [sq in]:</label>
+                    <input type="number" name="areaOfMaterial" placeholder="Enter Area of Material">
+                </div>
+                <div class="cell">
+                    <label for="numLayers">Number of Layers:</label>
+                    <input type="number" name="numLayers" placeholder="Enter Number of Layers">
+                </div>
+            </div>
+        </div>
+
+        <button type="button" onclick="addRow()">+</button>
+        <button type="button" onclick="calculateAreaWeight()">Simulate</button>
+
+        <div class="answer-box">
+            <h3>Weight of the Cloth [grams]</h3>
+            <p id="resultText">-</p>
+        </div>
+    </div>
+
+    <!-- Add a script to handle the area weight calculation and row addition -->
+    <!-- Add a script to handle the updated area weight calculation and row addition -->
+<!-- Add a script to handle the updated area weight calculation and row addition -->
+<script>
+    // Function to handle the updated area weight calculation
+    function calculateAreaWeight() {
+        // Retrieve input values
+        var rows = document.querySelectorAll(".excel-row");
+        var results = [];
+
+        rows.forEach(function (row) {
+            var arealWeight = parseFloat(row.querySelector("[name='arealWeight']").value) || 0;
+            var areaOfMaterial = parseFloat(row.querySelector("[name='areaOfMaterial']").value) || 0;
+            var numLayers = parseInt(row.querySelector("[name='numLayers']").value) || 0;
+
+            // Updated calculation logic
+            var result = (arealWeight / 1296) * areaOfMaterial * numLayers * 28.349;
+            results.push(result);
+        });
+
+        // Display the results
+        var totalWeight = results.reduce(function (acc, current) {
+            return acc + current;
+        }, 0);
+
+        // Update the answer box
+        document.getElementById("resultText").textContent = totalWeight.toFixed(2);
+    }
+
+    // Function to add a new row of input fields
+    function addRow() {
+        var inputRows = document.getElementById("inputRows");
+
+        // Clone the first row and append it to the container
+        var newRow = inputRows.firstElementChild.cloneNode(true);
+        inputRows.appendChild(newRow);
+
+        // Clear the values in the new row
+        newRow.querySelectorAll("input").forEach(function (input) {
+            input.value = "";
+        });
+
+        // Update the answer box when a new row is added
+        calculateAreaWeight();
+    }
+</script>
+
+
+</body>
+
+</html>
