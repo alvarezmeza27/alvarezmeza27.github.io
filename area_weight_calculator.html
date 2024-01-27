@@ -5,13 +5,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area Weight Calculator</title>
+    <title>Wet-layout</title>
     <link rel="stylesheet" href="css/area_weight_styles.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/font/flaticon.css">
+    <link rel="stylesheet" href="css/media-queries.css">
+    <link rel="icon" href="assets/img/icon_logo.png" type="image/x-icon"/>
 </head>
 
 <body>
-    <div class="calculator-container">
+    <header>
+        <section class="header-icons-container">
+            <div class="icons">
+                <a href="https://www.linkedin.com/in/miguel-jose-alvarez-meza-599598191/"><span class="flaticon-010-linkedin" > </span></a>
+                <a href="https://www.youtube.com/channel/UC6NkhwwzbsU2lANMKMkjAyA"><span class="flaticon-008-youtube"></span></a>
+                <a href="https://www.instagram.com/miguelsapiens/"><span class="flaticon-011-instagram"></span></a>
+            </div>
+        </section>
+        
+        <nav>
+            <section class="nav-logo-container">
+                <a href="index.html"><img src="assets/img/Logo-miguel.png" alt="Logo de mi blog"></a>
+            </section>
+            <section class="profile-link">
+                <a href="perfil.html">About me</a>
+            </section>
+        </nav>
+    </header>
+
+    <main>
+    <div class="calculator-container dry-fabric-calculator">
         <h3>Dry Fabric Weight Calculator</h3>
+        <p>Useful to calculate the Theorical Dry Fabric Weight </p>
 
         <div id="inputRows">
             <div class="excel-row">
@@ -24,67 +49,159 @@
                     <input type="number" name="areaOfMaterial" placeholder="Enter Area of Material">
                 </div>
                 <div class="cell">
-                    <label for="numLayers">Number of Layers:</label>
+                    <label for="numLayers">Number of Layers equals:</label>
                     <input type="number" name="numLayers" placeholder="Enter Number of Layers">
                 </div>
             </div>
         </div>
 
-        <button type="button" onclick="addRow()">+</button>
-        <button type="button" onclick="calculateAreaWeight()">Simulate</button>
+        <button type="button" onclick="addRow()">Add Another Layer</button>
+        <button type="button" onclick="calculateAreaWeight()">Calculate</button>
 
         <div class="answer-box">
             <h3>Weight of the Cloth [grams]</h3>
-            <p id="resultText">-</p>
+            <p id="resultTextDryFabric">-</p>
         </div>
     </div>
 
-    <!-- Add a script to handle the area weight calculation and row addition -->
-    <!-- Add a script to handle the updated area weight calculation and row addition -->
-<!-- Add a script to handle the updated area weight calculation and row addition -->
-<script>
-    // Function to handle the updated area weight calculation
-    function calculateAreaWeight() {
-        // Retrieve input values
-        var rows = document.querySelectorAll(".excel-row");
-        var results = [];
 
-        rows.forEach(function (row) {
-            var arealWeight = parseFloat(row.querySelector("[name='arealWeight']").value) || 0;
-            var areaOfMaterial = parseFloat(row.querySelector("[name='areaOfMaterial']").value) || 0;
-            var numLayers = parseInt(row.querySelector("[name='numLayers']").value) || 0;
 
-            // Updated calculation logic
-            var result = (arealWeight / 1296) * areaOfMaterial * numLayers * 28.349;
-            results.push(result);
-        });
+    <!-- Fiber/Resin System Ratio Calculator -->
+    <div class="calculator-container resin-system-calculator">
+        <h3>Fiber/Resin System Ratio</h3>
+        <p>Useful for determining the weight and percentage of resin when the piece has been laminated, cured, and trimmed. The value of the fiber's weight is brought from the preceding step.</p>
+        <div class="excel-row">
+            <div class="cell">
+                <label for="weightaftercure">Weight of the Panel After Cure [grams]</label>
+                <input type="number" name="weightaftercure" placeholder="Enter value">
+            </div>
+        </div>
 
-        // Display the results
-        var totalWeight = results.reduce(function (acc, current) {
-            return acc + current;
-        }, 0);
+        <button type="button" onclick="calculateResin()">Calculate</button>
 
-        // Update the answer box
-        document.getElementById("resultText").textContent = totalWeight.toFixed(2);
-    }
+        <div class="answer-box">
+            <h3>Weight Resin System in Trimmed Panel [grams]</h3>
+            <p id="weightPanel">-</p>
+        </div>
+        <div class="answer-box">
+            <h3>% Resin System</h3>
+            <p id="resinPercentage">-</p>
+            <p id="systemClassification">-</p>
+        </div>
+    </div>
 
-    // Function to add a new row of input fields
-    function addRow() {
-        var inputRows = document.getElementById("inputRows");
 
-        // Clone the first row and append it to the container
-        var newRow = inputRows.firstElementChild.cloneNode(true);
-        inputRows.appendChild(newRow);
+    <!-- Resin/Hardener calculator -->
+    <div class="calculator-container resin-hardener-calculator">
+        <h3>Resin/Hardener Calculator</h3>
+        <p>Just to know the resin/hardener weight used for the lamination process. 50:50 Fake Target is used</p>
+        <div class="excel-row">
+            <div class="cell">
+                <label for="weightrealfiber">Fiber Weight in the scale [grams]</label>
+                <input type="number" name="weightrealfiber" placeholder="Enter value">
+            </div>
 
-        // Clear the values in the new row
-        newRow.querySelectorAll("input").forEach(function (input) {
-            input.value = "";
-        });
+            <div class="cell">
+                <label for="mixingratio">Mixing Ratio</label>
+                <input type="number" name="mixingratio_resin" placeholder="Enter Resin Ratio (100 Estandar)">
+                <input type="number" name="mixingratio_hardener" placeholder="Enter Hardener Ratio (38 Estandar)">
+            </div>
+        </div>
 
-        // Update the answer box when a new row is added
-        calculateAreaWeight();
-    }
-</script>
+        <button type="button" onclick="calculateResin_hardener()">Calculate</button>
+
+        <div class="answer-box">
+            <h3>Weight Hardener [grams]</h3>
+            <p id="weighthardener_mix">-</p>
+        </div>
+        <div class="answer-box">
+            <h3>Weight Resin [grams]</h3>
+            <p id="weightresin_mix">-</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateAreaWeight() {
+            var rows = document.querySelectorAll(".dry-fabric-calculator .excel-row");
+            var results = [];
+
+            rows.forEach(function (row) {
+                var arealWeight = parseFloat(row.querySelector("[name='arealWeight']").value) || 0;
+                var areaOfMaterial = parseFloat(row.querySelector("[name='areaOfMaterial']").value) || 0;
+                var numLayers = parseInt(row.querySelector("[name='numLayers']").value) || 0;
+
+                var result = (arealWeight / 1296) * areaOfMaterial * numLayers * 28.349;
+                results.push(result);
+            });
+
+            var totalWeight = results.reduce(function (acc, current) {
+                return acc + current;
+            }, 0);
+
+            document.getElementById("resultTextDryFabric").textContent = totalWeight.toFixed(2);
+        }
+
+        function calculateResin() {
+            var rows = document.querySelectorAll(".dry-fabric-calculator .excel-row");
+            var results = [];
+
+            rows.forEach(function (row) {
+                var arealWeight = parseFloat(row.querySelector("[name='arealWeight']").value) || 0;
+                var areaOfMaterial = parseFloat(row.querySelector("[name='areaOfMaterial']").value) || 0;
+                var numLayers = parseInt(row.querySelector("[name='numLayers']").value) || 0;
+
+                var result = (arealWeight / 1296) * areaOfMaterial * numLayers * 28.349;
+                results.push(result);
+            });
+
+            var totalWeight = results.reduce(function (acc, current) {
+                return acc + current;
+            }, 0);
+
+
+            var weight = parseFloat(document.querySelector("[name='weightaftercure']").value) || 0;
+
+            var weight_resin = weight-totalWeight;
+            document.getElementById("weightPanel").textContent = weight_resin.toFixed(2);
+
+            var percentage_resin = (weight_resin / weight) * 100;
+            document.getElementById("resinPercentage").textContent = percentage_resin.toFixed(2);
+
+            var systemClassification = percentage_resin < 50 ? 'Lean Resin' : 'Rich Resin';
+            document.getElementById("systemClassification").textContent = systemClassification;
+        }
+
+
+        function calculateResin_hardener() {
+            var weight_hardener =  parseFloat(document.querySelector("[name='weightrealfiber']").value) || 0;
+            var weight_b = parseFloat(document.querySelector("[name='mixingratio_resin']").value) || 0;
+            var weight_c = parseFloat(document.querySelector("[name='mixingratio_hardener']").value) || 0;
+            var weighthardener_mix = (weight_hardener * weight_c)/(weight_c + weight_b);
+            document.getElementById('weighthardener_mix').textContent = weighthardener_mix.toFixed(2);
+            var weightresin_mix = weight_hardener - weighthardener_mix;
+            document.getElementById('weightresin_mix').textContent = weightresin_mix.toFixed(2);
+
+        }
+
+        function addRow() {
+            var inputRows = document.getElementById("inputRows");
+
+            var newRow = inputRows.firstElementChild.cloneNode(true);
+            inputRows.appendChild(newRow);
+
+            newRow.querySelectorAll("input").forEach(function (input) {
+                input.value = "";
+            });
+
+            calculateAreaWeight();
+        }
+    </script>
+    </main>
+
+
+    <footer>
+        <p>Made by Miguel without love for the ASR students. 2024</p>
+    </footer>
 
 
 </body>

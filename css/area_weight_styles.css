@@ -14,7 +14,7 @@ body {
 
 .excel-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .cell {
@@ -25,7 +25,7 @@ body {
 }
 
 .cell label {
-    text-align: left;
+    text-align: center;
 }
 
 input {
