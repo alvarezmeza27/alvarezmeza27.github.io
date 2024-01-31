@@ -82,7 +82,8 @@
             <p id="set_back">-</p>
             <p id="flat_a">-</p>
             <p id="flat_b">-</p>
-            <p id="flat_p">-</p>
+            <p id="flat_c">-</p>
+            <p id="flat_d">-</p>
         </div>
     </div>
 
@@ -152,8 +153,6 @@ function calculate() {
         return;
     }
 
-    var flatA = flatAValue - setback;
-
       // Determine the number of flats (considering Flat A and Flat B)
       var numFlats = document.querySelectorAll('.excel-row-flat').length;
 
@@ -163,39 +162,58 @@ function calculate() {
 
 if (numFlats <= 2) {
     // If there are 2 or fewer flats, "Flat B" is the same as "Flat A" minus setback
+    flatA = flatAValue - setback;
     flatB = flatBValue - setback;
-} else {
-    // If there are more than 2 flats, "Flat B" is twice the setback value
+
+    var result_Text_flatA = "Flat A: "+flatA;
+    var result_Text_flatB = "Flat B: "+flatB;
+    document.getElementById("flat_a").textContent = result_Text_flatA;
+    document.getElementById("flat_b").textContent = result_Text_flatB;
+    
+} else if (numFlats === 3) {
+    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
+    flatC = flatCValue - setback;
     flatB = flatBValue - (2*setback);
+    flatA = flatAValue - setback;
+
+     var result_Text_flatA = "Flat A: "+flatA;
+    var result_Text_flatB = "Flat B: "+flatB;
+     var result_Text_flatC = "Flat C: "+flatC;
+    document.getElementById("flat_a").textContent = result_Text_flatA;
+    document.getElementById("flat_b").textContent = result_Text_flatB;
+       document.getElementById("flat_c").textContent = result_Text_flatC;
+
+} else {
+    var flatDValue = parseFloat(document.getElementsByName("flatD")[0].value);
+    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
+    flatD = flatDValue - setback;
+    flatC = flatCValue - (2*setback);
+    flatB = flatBValue - (2*setback);
+    flatA = flatAValue - setback;
+
+    var result_Text_flatA = "Flat A: "+flatA;
+    var result_Text_flatB = "Flat B: "+flatB;
+     var result_Text_flatC = "Flat C: "+flatC;
+         var result_Text_flatD = "Flat D: "+flatD;
+    document.getElementById("flat_a").textContent = result_Text_flatA;
+    document.getElementById("flat_b").textContent = result_Text_flatB;
+       document.getElementById("flat_c").textContent = result_Text_flatC;
+           document.getElementById("flat_d").textContent = result_Text_flatD;
 }
 
-     for (var i = 3; i <= numFlats; i++) {
-        var flatValue_for = parseFloat(document.getElementsByName("flat" + String.fromCharCode('A'.charCodeAt(0) + i))[0].value);
 
-        // Check if the flat value is a valid number
-        if (isNaN(flatValue_for)) {
-            alert("Please enter a valid number for 'Flat " + String.fromCharCode('A'.charCodeAt(0) + i) + "'.");
-            return;
-        }
-        var result_miguel=flatValue_for;
-          // Calculate each flat based on user input and setbacks
-          //resultText (i === numFlats ? flatValue - setback : flatValue);
-    }
 
     // Display the result
     var resultText_bend = "Bend Allowance: " + bend_allowance;
     var resultText_setback = "Set Back: "+setback;
-    var result_Text_flatA = "Flat A: "+flatA;
-    var result_Text_flatB = "Flat B: "+flatB;
+    
+   
 
-    var resultText_p = "prueba "+result_miguel;
 
 
     document.getElementById("bend_allowance").textContent = resultText_bend;
     document.getElementById("set_back").textContent = resultText_setback;
-    document.getElementById("flat_a").textContent = result_Text_flatA;
-    document.getElementById("flat_b").textContent = result_Text_flatB;
-    document.getElementById("flat_p").textContent = resultText_p;
+
 }
 
 </script>
