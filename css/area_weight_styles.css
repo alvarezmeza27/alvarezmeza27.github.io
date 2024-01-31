@@ -17,6 +17,11 @@ body {
     justify-content: center;
 }
 
+.excel-row-flat {
+    display: flex;
+    justify-content: center;
+}
+
 .cell {
     width: calc(33.33% - 10px); /* Adjust width as needed */
     margin-right: 10px;

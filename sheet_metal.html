@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Metal</title>
+    <link rel="stylesheet" href="css/area_weight_styles.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/font/flaticon.css">
+    <link rel="stylesheet" href="css/media-queries.css">
+    <link rel="icon" href="assets/img/icon_logo.png" type="image/x-icon"/>
+</head>
+
+<body>
+    <header>
+        <section class="header-icons-container">
+            <div class="icons">
+                <a href="https://www.linkedin.com/in/miguel-jose-alvarez-meza-599598191/"><span class="flaticon-010-linkedin" > </span></a>
+                <a href="https://www.youtube.com/channel/UC6NkhwwzbsU2lANMKMkjAyA"><span class="flaticon-008-youtube"></span></a>
+                <a href="https://www.instagram.com/miguelsapiens/"><span class="flaticon-011-instagram"></span></a>
+            </div>
+        </section>
+        
+        <nav>
+            <section class="nav-logo-container">
+                <a href="index.html"><img src="assets/img/Logo-miguel.png" alt="Logo de mi blog"></a>
+            </section>
+            <section class="profile-link">
+                <a href="perfil.html">About me</a>
+            </section>
+        </nav>
+    </header>
+
+    <main>
+    <div class="calculator-container sheet-metal-bend-allowance">
+        <h3>Sheet Metal - Bend Allowance</h3>
+        <p>Caculate the bend allawance for metals. The final reponse of this tool is to give you the flat sheet for bending and to know how muvh the metal will bend due to cold working </p>
+
+        <div id="inputRows">
+            <div class="excel-row">
+                <div class="cell">
+                    <label for="Thickness">Thickness [inch]:</label>
+                    <input type="number" name="Thickness" placeholder="Btw 0.02 to 0.1">
+                </div>
+                <div class="cell">
+                    <label for="bend_radius">Bend Radius [inch]:</label>
+                    <input type="number" name="bend_radius" placeholder="0.1875 (3/16) Normally">
+                </div>
+                <div class="cell">
+                    <label for="bend_agle">Bend Angle [°]:</label>
+                    <input type="number" name="bend_agle" placeholder="Enter Angle">
+                </div>
+            </div>
+            
+
+            <div class="excel-row-flat">
+                <div class="cell">
+                    <label for="flatA">Flat A:</label>
+                    <input type="number" name="flatA" placeholder="Enter value">
+                </div>
+            </div>
+            
+            <div class="excel-row-flat">
+                <div class="cell">
+                    <label for="flatB">Flat B:</label>
+                    <input type="number" name="flatB" placeholder="Enter value">
+                </div>
+            </div>
+    
+        </div>
+        
+
+        
+        <button type="button" onclick="addRow()">Add Another "Flat" Section</button>
+        <button type="button" onclick="calculate()">Calculate</button>
+
+        <div class="answer-box">
+            <h3>Results</h3>
+            <p id="bend_allowance">-</p>
+            <p id="set_back">-</p>
+            <p id="flat_a">-</p>
+            <p id="flat_b">-</p>
+            <p id="flat_p">-</p>
+        </div>
+    </div>
+
+
+    </main>
+
+    <script>
+
+        
+function addRow() {
+    // Get the inputRows container
+    var inputRows = document.getElementById("inputRows");
+
+    // Find the "Flat B" row
+    var flatBRow = inputRows.querySelector('.excel-row-flat:last-child');
+
+    // Check the current number of flat rows
+    var currentFlatCount = document.querySelectorAll('.excel-row-flat').length;
+
+    // Limit the maximum number of flats to 4
+    if (currentFlatCount >= 4) {
+        alert("Miguel is not rich, max 4 flat sections");
+        return;  // Stop the function if the limit is reached
+    }
+
+    // Determine the next alphabetical letter for the new row
+    var nextLetter = String.fromCharCode('A'.charCodeAt(0) + currentFlatCount);
+
+    // Create a new div element with the class 'excel-row-flat'
+    var newRow = document.createElement("div");
+    newRow.className = "excel-row-flat";
+
+    // Create the cell with the title for the new row
+    var cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerHTML = '<label for="flat' + nextLetter + '">Flat ' + nextLetter + ':</label><input type="text" name="flat' + nextLetter + '" placeholder="Enter value">';
+
+    // Append the cell to the new row
+    newRow.appendChild(cell);
+
+    // Insert the new row after the "Flat B" row
+    if (flatBRow) {
+        inputRows.insertBefore(newRow, flatBRow.nextSibling);
+    } else {
+        // If there is no "Flat B" row yet, append the new row at the end
+        inputRows.appendChild(newRow);
+    }
+}
+
+function calculate() {
+    // Get the input values
+    var thickness = parseFloat(document.getElementsByName("Thickness")[0].value);
+    var bendRadius = parseFloat(document.getElementsByName("bend_radius")[0].value);
+    var bendAngle = parseFloat(document.getElementsByName("bend_agle")[0].value);
+
+    // equation
+    var bend_allowance = (((2*(22/7)))*(bendRadius+(0.5*thickness)))/(360/bendAngle) ;
+    var setback= bendRadius + thickness;
+
+    // Get the value entered in "Flat A"
+    var flatAValue = parseFloat(document.getElementsByName("flatA")[0].value);
+    var flatBValue = parseFloat(document.getElementsByName("flatB")[0].value);
+
+    // Check if "Flat A" value is a valid number
+    if (isNaN(flatAValue)) {
+        alert("Please Dummie, add the flat b distance");
+        return;
+    }
+
+    var flatA = flatAValue - setback;
+
+      // Determine the number of flats (considering Flat A and Flat B)
+      var numFlats = document.querySelectorAll('.excel-row-flat').length;
+
+       
+ // Calculate "Flat B" based on the number of flats
+ var flatBValue;
+
+if (numFlats <= 2) {
+    // If there are 2 or fewer flats, "Flat B" is the same as "Flat A" minus setback
+    flatB = flatBValue - setback;
+} else {
+    // If there are more than 2 flats, "Flat B" is twice the setback value
+    flatB = flatBValue - (2*setback);
+}
+
+     for (var i = 3; i <= numFlats; i++) {
+        var flatValue_for = parseFloat(document.getElementsByName("flat" + String.fromCharCode('A'.charCodeAt(0) + i))[0].value);
+
+        // Check if the flat value is a valid number
+        if (isNaN(flatValue_for)) {
+            alert("Please enter a valid number for 'Flat " + String.fromCharCode('A'.charCodeAt(0) + i) + "'.");
+            return;
+        }
+        var result_miguel=flatValue_for;
+          // Calculate each flat based on user input and setbacks
+          //resultText (i === numFlats ? flatValue - setback : flatValue);
+    }
+
+    // Display the result
+    var resultText_bend = "Bend Allowance: " + bend_allowance;
+    var resultText_setback = "Set Back: "+setback;
+    var result_Text_flatA = "Flat A: "+flatA;
+    var result_Text_flatB = "Flat B: "+flatB;
+
+    var resultText_p = "prueba "+result_miguel;
+
+
+    document.getElementById("bend_allowance").textContent = resultText_bend;
+    document.getElementById("set_back").textContent = resultText_setback;
+    document.getElementById("flat_a").textContent = result_Text_flatA;
+    document.getElementById("flat_b").textContent = result_Text_flatB;
+    document.getElementById("flat_p").textContent = resultText_p;
+}
+
+</script>
+
+    <footer>
+        <p>Made by Miguel without love for the ASR students. 2024</p>
+    </footer>
+
+
+</body>
+
+</html>
