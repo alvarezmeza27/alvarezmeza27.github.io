@@ -50,3 +50,19 @@ button {
     color: #fff;
     cursor: pointer;
 }
+
+.rectangular-shape {
+    display: flex;
+    height: 50px; /* Adjust the height as needed */
+}
+
+.section {
+    border: 2px solid #000;
+    box-sizing: border-box;
+}
+/* Add this to your CSS */
+.split {
+    height: 50px; /* Adjust the height of the split as needed */
+    border: 2px solid #000;
+    box-sizing: border-box;
+}
