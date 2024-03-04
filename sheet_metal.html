@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="css/font/flaticon.css">
     <link rel="stylesheet" href="css/media-queries.css">
     <link rel="icon" href="assets/img/icon_logo.png" type="image/x-icon"/>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 </head>
 
 <body>
@@ -36,7 +39,16 @@
     <main>
     <div class="calculator-container sheet-metal-bend-allowance">
         <h3>Sheet Metal - Bend Allowance</h3>
-        <p>Caculate the bend allawance for metals. The final reponse of this tool is to give you the flat sheet for bending and to know how muvh the metal will bend due to cold working </p>
+        <p>This calculator can give you the basic layout to bend some parts. The Bend Allowance (BA) needs to be taking into account due to the plastic deformation carry out on the part. Before using the calculator you should know the Radius of the bending machine, the degree of bending (Normally is 90 degrees) and the final lengths. To calculate the Bend Allowance the following equation is used, where BR is Bend Radius, T is thickness and A is Bend Angle: </p>
+        <div id="equation">
+            \(BA = {(2\pi*(BR+(0.5*T)))/(360/A)}\)
+            
+        </div>
+
+        <p>The Set Back is calculated using the following equation, where Mt is Material Thickness and K is a contant given by the Bend Angle. When the bending angle is 90, K is equal to 1. For others angles, you need to find the value in a chart. However, there is a basic equation into the code to calculate the K factor when the angle is not 90.</p>
+        <div id="equation">
+            \(SB=K(BR+MT)\)
+        </div>
 
         <div id="inputRows">
             <div class="excel-row">
@@ -52,6 +64,11 @@
                     <label for="bend_agle">Bend Angle [°]:</label>
                     <input type="number" name="bend_agle" placeholder="Enter Angle">
                 </div>
+                <div class="cell">
+                    <label for="k_value">k value:</label>
+                    <input type="number" name="k_value" placeholder="Optional">
+                </div>
+                
             </div>
             
 
@@ -84,6 +101,9 @@
             <p id="flat_b">-</p>
             <p id="flat_c">-</p>
             <p id="flat_d">-</p>
+            <p id="tdw">-</p>
+            <p id="k_value">-</p>
+            <div id="result-container"></div>
         </div>
     </div>
 
@@ -134,87 +154,163 @@ function addRow() {
 }
 
 function calculate() {
-    // Get the input values
-    var thickness = parseFloat(document.getElementsByName("Thickness")[0].value);
-    var bendRadius = parseFloat(document.getElementsByName("bend_radius")[0].value);
-    var bendAngle = parseFloat(document.getElementsByName("bend_agle")[0].value);
+                    // Get the input values
+                    var thickness = parseFloat(document.getElementsByName("Thickness")[0].value);
+                    var bendRadius = parseFloat(document.getElementsByName("bend_radius")[0].value);
+                    var bendAngle = parseFloat(document.getElementsByName("bend_agle")[0].value);
+                    var k_value = document.getElementsByName("k_value")[0].value;
 
-    // equation
-    var bend_allowance = (((2*(22/7)))*(bendRadius+(0.5*thickness)))/(360/bendAngle) ;
-    var setback= bendRadius + thickness;
+                    // equation
+                    var bend_allowance = (((2*(22/7)))*(bendRadius+(0.5*thickness)))/(360/bendAngle) ;
 
-    // Get the value entered in "Flat A"
-    var flatAValue = parseFloat(document.getElementsByName("flatA")[0].value);
-    var flatBValue = parseFloat(document.getElementsByName("flatB")[0].value);
 
-    // Check if "Flat A" value is a valid number
-    if (isNaN(flatAValue)) {
-        alert("Please Dummie, add the flat b distance");
-        return;
-    }
+                    if (isNaN(parseFloat(k_value))) {
+                        if (bendAngle < 90) {
+                           k_value = (0.00004 * (bendAngle ** 2)) + (0.007 * bendAngle) + 0.0116;
+                         } else if (bendAngle === 90) {
+                        k_value = 1;
+                        } else if (bendAngle > 91) {
+                        k_value = (0.0009 * (bendAngle ** 2)) - (0.1716 * bendAngle) + 9.5831;
+                     }
+                    } else {
+                       k_value = parseFloat(k_value);
+                        }
 
-      // Determine the number of flats (considering Flat A and Flat B)
-      var numFlats = document.querySelectorAll('.excel-row-flat').length;
+                    var setback= k_value*(bendRadius + thickness);
+                    
+
+                    var tdw;
+                    // Get the value entered in "Flat A"
+                    var flatAValue = parseFloat(document.getElementsByName("flatA")[0].value);
+                    var flatBValue = parseFloat(document.getElementsByName("flatB")[0].value);
+
+                    // Check if "Flat A" value is a valid number
+                    if (isNaN(flatAValue)) {
+                    alert("Please Dummie, add the flat b distance");
+                    return;
+                    }
+
+                    // Determine the number of flats (considering Flat A and Flat B)
+                    var numFlats = document.querySelectorAll('.excel-row-flat').length;
 
        
- // Calculate "Flat B" based on the number of flats
- var flatBValue;
+                    // Calculate "Flat B" based on the number of flats
+                    var flatBValue;
 
-if (numFlats <= 2) {
-    // If there are 2 or fewer flats, "Flat B" is the same as "Flat A" minus setback
-    flatA = flatAValue - setback;
-    flatB = flatBValue - setback;
+                    if (numFlats <= 2) {
+                    // If there are 2 or fewer flats, "Flat B" is the same as "Flat A" minus setback
+                    flatA = flatAValue - setback;
+                    flatB = flatBValue - setback;
+                    tdw = flatA+flatB+bend_allowance;
 
-    var result_Text_flatA = "Flat A: "+flatA;
-    var result_Text_flatB = "Flat B: "+flatB;
-    document.getElementById("flat_a").textContent = result_Text_flatA;
-    document.getElementById("flat_b").textContent = result_Text_flatB;
+                    var result_Text_flatA = "Flat A: "+flatA;
+                    var result_Text_flatB = "Flat B: "+flatB;
+                    var result_Text_tdw = "TDW: "+tdw.toFixed(4);
+                    document.getElementById("flat_a").textContent = result_Text_flatA;
+                    document.getElementById("flat_b").textContent = result_Text_flatB;
+                    document.getElementById("tdw").textContent = result_Text_tdw;
     
-} else if (numFlats === 3) {
-    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
-    flatC = flatCValue - setback;
-    flatB = flatBValue - (2*setback);
-    flatA = flatAValue - setback;
+                    } else if (numFlats === 3) {
+                    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
+                    flatC = flatCValue - setback;
+                    flatB = flatBValue - (2*setback);
+                    flatA = flatAValue - setback;
+                    tdw = flatA+flatB+flatC+(bend_allowance*2);
 
-     var result_Text_flatA = "Flat A: "+flatA;
-    var result_Text_flatB = "Flat B: "+flatB;
-     var result_Text_flatC = "Flat C: "+flatC;
-    document.getElementById("flat_a").textContent = result_Text_flatA;
-    document.getElementById("flat_b").textContent = result_Text_flatB;
-       document.getElementById("flat_c").textContent = result_Text_flatC;
+                    var result_Text_flatA = "Flat A: "+flatA;
+                    var result_Text_flatB = "Flat B: "+flatB;
+                    var result_Text_flatC = "Flat C: "+flatC;
+                    var result_Text_tdw = "TDW: "+tdw.toFixed(4);
+                    document.getElementById("flat_a").textContent = result_Text_flatA;
+                    document.getElementById("flat_b").textContent = result_Text_flatB;
+                    document.getElementById("flat_c").textContent = result_Text_flatC;
+                    document.getElementById("tdw").textContent = result_Text_tdw;
 
-} else {
-    var flatDValue = parseFloat(document.getElementsByName("flatD")[0].value);
-    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
-    flatD = flatDValue - setback;
-    flatC = flatCValue - (2*setback);
-    flatB = flatBValue - (2*setback);
-    flatA = flatAValue - setback;
+                    } else {
+                    var flatDValue = parseFloat(document.getElementsByName("flatD")[0].value);
+                    var flatCValue = parseFloat(document.getElementsByName("flatC")[0].value);
+                    flatD = flatDValue - setback;
+                    flatC = flatCValue - (2*setback);
+                    flatB = flatBValue - (2*setback);
+                    flatA = flatAValue - setback;
+                    tdw = flatA+flatB+flatC+flatD+(bend_allowance*3);
 
-    var result_Text_flatA = "Flat A: "+flatA;
-    var result_Text_flatB = "Flat B: "+flatB;
-     var result_Text_flatC = "Flat C: "+flatC;
-         var result_Text_flatD = "Flat D: "+flatD;
-    document.getElementById("flat_a").textContent = result_Text_flatA;
-    document.getElementById("flat_b").textContent = result_Text_flatB;
-       document.getElementById("flat_c").textContent = result_Text_flatC;
-           document.getElementById("flat_d").textContent = result_Text_flatD;
-}
+                    var result_Text_flatA = "Flat A: "+flatA;
+                    var result_Text_flatB = "Flat B: "+flatB;
+                    var result_Text_flatC = "Flat C: "+flatC;
+                    var result_Text_flatD = "Flat D: "+flatD;
+                    var result_Text_tdw = "TDW: "+tdw.toFixed(4);
+                    document.getElementById("flat_a").textContent = result_Text_flatA;
+                    document.getElementById("flat_b").textContent = result_Text_flatB;
+                    document.getElementById("flat_c").textContent = result_Text_flatC;
+                    document.getElementById("flat_d").textContent = result_Text_flatD;
+                    document.getElementById("tdw").textContent = result_Text_tdw;
+                    }
 
 
 
-    // Display the result
-    var resultText_bend = "Bend Allowance: " + bend_allowance;
-    var resultText_setback = "Set Back: "+setback;
+                    // Display the result
+                    var resultText_bend = "Bend Allowance: " + bend_allowance.toFixed(4);
+                    var resultText_setback = "Set Back: "+setback.toFixed(4);
+                    var resultTextk_value="k value: "+k_value.toFixed(4);
     
    
+                    document.getElementById("bend_allowance").textContent = resultText_bend;
+                    document.getElementById("set_back").textContent = resultText_setback;
+                    document.getElementById("k_value").textContent = resultTextk_value;
 
 
 
-    document.getElementById("bend_allowance").textContent = resultText_bend;
-    document.getElementById("set_back").textContent = resultText_setback;
+
+
+
+                //Diagram to help with the viusualization of the flats
+                // Get the result container
+    var resultContainer = document.getElementById("result-container");
+
+// Remove any existing rectangles
+resultContainer.innerHTML = "";
+
+// Create a new div element for the rectangular shape
+var rectangularShape = document.createElement("div");
+rectangularShape.className = "rectangular-shape";
+
+// Calculate the width of each flat section and each split
+var sectionWidth = 100 / ((numFlats-1) * 2); // Each flat section with a split in between
+var splitWidth = sectionWidth;
+
+// Add the first flat section "Flat A" (without a split before it)
+var firstSection = document.createElement("div");
+firstSection.className = "section";
+firstSection.style.width = sectionWidth + "%";
+firstSection.textContent = ("Flat A");
+rectangularShape.appendChild(firstSection);
+
+// Add splits and remaining flat sections
+for (var i = 1; i <= numFlats-1; i++) {
+    // Add split for "Bend Allowance"
+    var bendAllowanceSplit = document.createElement("div");
+    bendAllowanceSplit.className = "split";
+    bendAllowanceSplit.style.width = splitWidth + "%";
+    bendAllowanceSplit.textContent = "BA";
+    rectangularShape.appendChild(bendAllowanceSplit);
+
+    // Add flat section
+    var section = document.createElement("div");
+    section.className = "section";
+    section.style.width = sectionWidth + "%";
+    section.textContent = "Flat " + String.fromCharCode('A'.charCodeAt(0) + i);
+    rectangularShape.appendChild(section);
+}
+
+
+
+// Append the rectangular shape to the result container
+resultContainer.appendChild(rectangularShape);
 
 }
+
+
 
 </script>
 
@@ -223,6 +319,16 @@ if (numFlats <= 2) {
     </footer>
 
 
+    <script type="text/javascript">
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+            },
+            svg: {
+                fontCache: 'global',
+            },
+        };
+    </script>
 </body>
 
 </html>
