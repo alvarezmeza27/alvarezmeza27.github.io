@@ -59,7 +59,7 @@
                 </div>
                 <div class="cell">
                     <label for="bend_radius">Bend Radius [inch]:</label>
-                    <input type="number" name="bend_radius" placeholder="0.1875 (3/16) Normally">
+                    <input type="text" name="bend_radius" placeholder="0.1875 (3/16) Normally">
                 </div>
                 <div class="cell">
                     <label for="bend_agle">Bend Angle [°]:</label>
@@ -128,10 +128,6 @@
         </div>
 
 
-        <h3>Number of Rivets</h3>
-        <p>In construction</p>
-
-
     </div>
 
 
@@ -142,6 +138,30 @@
 
     <div class="calculator-container sheet-metal-bend-allowance">
         <h2>Special Fasteners</h2>
+
+        <h3>Blind Rivets</h3>
+        <h4>CherryMax (Mechanical lock) </h4>
+        <p>The identification is CR3. The next two numbers represent the rivet type and Material combination.
+            The Diameter is in 32th of an inch.
+            Available in nomial size and 1/16" oversize.
+            Gold color means nominal size while silver colored is oversize.
+            They are more difficult to remove due to its mechanical locked. First it is necesary to rid the lock ring.
+        
+            <h4>Cherry Friction lock Rivets</h4>
+            <p>Used in non structual applications. CR9163 (Universal Head) and CR9162 (Countersink Head)</p>
+        </p>
+
+        <h3>Rivnuts</h3>
+        <p>Has internal threads for the machine screws. Usually are made from aluminum allow.</p>
+
+        <h3>Anchor Nuts</h3>
+
+        <h3>Lockbolts</h3>
+
+        <h3>Jo-bolts</h3>
+
+        <h3>Hi/shear Pin Rivets</h3>
+
         <p>In construction</p>
 
     </div>
@@ -195,7 +215,22 @@ function addRow() {
 function calculate() {
                     // Get the input values
                     var thickness = parseFloat(document.getElementsByName("Thickness")[0].value);
-                    var bendRadius = parseFloat(document.getElementsByName("bend_radius")[0].value);
+                    var bendRadiusInput = document.getElementsByName("bend_radius")[0].value;
+                    var bendRadius;
+                        if (bendRadiusInput.includes('/')) {
+                        // If the input contains a fraction
+                        var parts = bendRadiusInput.split('/');
+                        if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        bendRadius = parseFloat(parts[0]) / parseFloat(parts[1]);
+                        } else {
+                        console.error("Invalid fraction format");
+                        }
+                        } else {
+                         // If the input is a decimal number
+                         bendRadius = parseFloat(bendRadiusInput);
+                        }
+
+
                     var bendAngle = parseFloat(document.getElementsByName("bend_agle")[0].value);
                     var k_value = document.getElementsByName("k_value")[0].value;
 
