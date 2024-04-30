@@ -34,9 +34,14 @@
     </header>
 
     <main>
+        <h1>Composite Materials</h1>
+        <p>On this page you can find three calculator; Dry fabric calculator, Weight\Resin Ratio after cured and Resin Hardener Calculator.</p>
+
     <div class="calculator-container dry-fabric-calculator">
         <h3>Dry Fabric Weight Calculator</h3>
-        <p>Useful to calculate the Theorical Dry Fabric Weight </p>
+        <p>This section is useful to calculate the Theorical Dry Fabric Weight.</p>
+        <p>Before using this calculator, you should know the areal weight of the fiber (Oz square yard for this case), the area of the material (in square inches) and the number of layers. Behind scene the code is taking the Areal Weight and dividing it by 1296. This last number is the convertion between yards to inches. Then the code takes this number and make a multiplication with the area of material that is already coming in inches. Finally, the value is converted to grams. </p>
+        <p>In case of having similar layers, you can just multiply them by the number of times they are repeted. If you have different layers, add as many as you need using the "Add Another Layer" botton.</p>
 
         <div id="inputRows">
             <div class="excel-row">
@@ -69,7 +74,8 @@
     <!-- Fiber/Resin System Ratio Calculator -->
     <div class="calculator-container resin-system-calculator">
         <h3>Fiber/Resin System Ratio</h3>
-        <p>Useful for determining the weight and percentage of resin when the piece has been laminated, cured, and trimmed. The value of the fiber's weight is brought from the preceding step.</p>
+        <p><b>To use this section you MUST have a result on the Dry Fabric Weight part.</b></p>
+        <p>This section is useful for determining the weight and percentage of resin when the piece has been laminated, cured and trimmed. The value of the fiber's weight is brought from the preceding step.</p>
         <div class="excel-row">
             <div class="cell">
                 <label for="weightaftercure">Weight of the Panel After Cure [grams]</label>
@@ -94,7 +100,9 @@
     <!-- Resin/Hardener calculator -->
     <div class="calculator-container resin-hardener-calculator">
         <h3>Resin/Hardener Calculator</h3>
-        <p>Just to know the resin/hardener weight used for the lamination process. 50:50 Fake Target is used</p>
+        <p>This section helps know the weight of both resin and hardener you should mix to get a 50:50 fake target in dry layout lamination. Before use it, you need to weight the fabric that is trimed. However, a theorical amount of resin can be calculated if you use the weight given in the first section of this page.</p>
+
+        <p>The weight of the fabric should be the same than the weight of the resin system. The resin system is a combination of the resin itself and a hardener that something can be a blend of slow and fast.</p>
         <div class="excel-row">
             <div class="cell">
                 <label for="weightrealfiber">Fiber Weight in the scale [grams]</label>
@@ -103,8 +111,8 @@
 
             <div class="cell">
                 <label for="mixingratio">Mixing Ratio</label>
-                <input type="number" name="mixingratio_resin" placeholder="Enter Resin Ratio (100 Estandar)">
-                <input type="number" name="mixingratio_hardener" placeholder="Enter Hardener Ratio (38 Estandar)">
+                <input type="number" name="mixingratio_resin" placeholder="(100 Estandar) Enter Resin Ratio ">
+                <input type="number" name="mixingratio_hardener" placeholder="(38 Estandar) Enter Hardener Ratio ">
             </div>
         </div>
 
@@ -200,7 +208,7 @@
 
 
     <footer>
-        <p>Made by Miguel without love for the ASR students. 2024</p>
+        <p>Special thanks to Devin for providing the knowledge to create this section. ASR Fanshawe College 2024.</p>
     </footer>
 
 
