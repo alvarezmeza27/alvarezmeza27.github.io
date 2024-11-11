@@ -59,3 +59,17 @@
     padding: 10% 8% 30%;
 }
 }
+
+
+
+@media (max-width: 768px) {
+    .grid-container p {
+      font-size: 15px;
+    }
+    .grid-container h1 {
+      font-size: 24px;
+    }
+    .grid-container h2 {
+      font-size: 20px;
+    }
+  }
